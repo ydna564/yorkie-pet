@@ -1,0 +1,14 @@
+{
+  "name": "yorkie-pet",
+  "version": "1.0.0",
+  "description": "A Yorkshire Terrier desktop pet that wanders your screen and reacts to clicks.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.0.0"
+  }
+}

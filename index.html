@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  html, body {
+    margin: 0; padding: 0; width: 76px; height: 84px; overflow: hidden;
+    background: transparent; pointer-events: none;
+    -webkit-user-select: none; user-select: none; cursor: default;
+  }
+  #stage { position: relative; width: 76px; height: 84px; }
+
+  #shadow { position: absolute; left: 50%; bottom: 2px; width: 38px; height: 6px;
+    margin-left: -19px; background: radial-gradient(ellipse at center, rgba(0,0,0,0.22), rgba(0,0,0,0) 70%);
+    pointer-events: none; }
+
+  #flip { position: absolute; inset: 0; transform-origin: 50% 70%; transition: transform 0.18s ease; }
+  #dog { position: absolute; left: 0; right: 0; bottom: 2px; height: 80px; transform-origin: 50% 100%; }
+
+  .pose { position: absolute; left: 50%; bottom: 0; pointer-events: auto; cursor: pointer;
+    -webkit-user-drag: none; user-drag: none; }
+
+  /* ---- sit (resting) ---- */
+  #sit { height: 61px; transform: translateX(-50%); transform-origin: 50% 100%;
+    animation: breathe 3.6s ease-in-out infinite; }
+  @keyframes breathe { 0%,100%{transform:translateX(-50%) scaleY(1);} 50%{transform:translateX(-50%) scaleY(1.02);} }
+
+  /* ---- walk (leg puppet) ---- */
+  #walk { display: none; width: 59px; height: 48px; transform: translateX(-50%); }
+  #walk img { position: absolute; left: 0; bottom: 0; width: 59px; height: 48px; pointer-events: auto; }
+  #dog.walking #sit { display: none; }
+  #dog.walking #walk { display: block; animation: walkbob 0.42s ease-in-out infinite; }
+  @keyframes walkbob { 0%,100%{transform:translateX(-50%) translateY(0);} 50%{transform:translateX(-50%) translateY(-2px);} }
+  /* paw movement disabled — legs stay still while walking */
+
+  /* ---- click emotions (whole body) ---- */
+  #dog.emo-excite { animation: jump 0.5s ease-out 4; }
+  @keyframes jump { 0%{transform:translateY(0);} 40%,55%{transform:translateY(-13px);} 100%{transform:translateY(0);} }
+  #dog.emo-joy { animation: hop 0.45s ease-in-out 5; }
+  @keyframes hop { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-7px);} }
+  #dog.emo-anger { animation: shk 0.08s linear 24; }
+  @keyframes shk { 0%,100%{transform:translateX(0) rotate(0);} 25%{transform:translateX(-2px) rotate(-1.4deg);} 75%{transform:translateX(2px) rotate(1.4deg);} }
+  #dog.emo-sad { animation: slump 2.4s ease-in-out 1; }
+  @keyframes slump { 0%{transform:translateY(0) scaleY(1);} 20%,80%{transform:translateY(2px) scaleY(0.96);} 100%{transform:translateY(0) scaleY(1);} }
+
+  /* ---- idle actions (play on the sit sprite) ---- */
+  #dog.act-look  #sit { animation: a-look 2.6s ease-in-out 1; transform-origin: 50% 92%; }
+  @keyframes a-look { 0%,100%{transform:translateX(-50%) rotate(0);} 22%{transform:translateX(-50%) rotate(-8deg);} 50%{transform:translateX(-50%) rotate(0);} 78%{transform:translateX(-50%) rotate(8deg);} }
+
+  #dog.act-yawn  #sit { animation: a-yawn 1.9s ease-in-out 1; }
+  @keyframes a-yawn { 0%,100%{transform:translateX(-50%) scaleY(1) scaleX(1) translateY(0);} 38%,58%{transform:translateX(-50%) scaleY(1.07) scaleX(0.98) translateY(-3px);} }
+
+  #dog.act-jump  #sit { animation: a-jump 0.85s ease-out 1; }
+  @keyframes a-jump { 0%,100%{transform:translateX(-50%) translateY(0);} 35%{transform:translateX(-50%) translateY(-11px);} 55%{transform:translateX(-50%) translateY(-11px);} }
+
+  #dog.act-smile #sit { animation: a-smile 1.2s ease-in-out 1; transform-origin: 50% 95%; }
+  @keyframes a-smile { 0%,100%{transform:translateX(-50%) rotate(0);} 20%{transform:translateX(-50%) rotate(-4deg) translateY(-2px);} 45%{transform:translateX(-50%) rotate(4deg);} 70%{transform:translateX(-50%) rotate(-3deg);} }
+
+  #dog.act-tongue #sit { animation: a-tongue 1.6s ease-in-out 1; }
+  @keyframes a-tongue { 0%,100%{transform:translateX(-50%) translateY(0);} 30%,70%{transform:translateX(-50%) translateY(1.5px);} }
+
+  #dog.act-sneeze #sit { animation: a-sneeze 1s ease-in-out 1; transform-origin: 50% 95%; }
+  @keyframes a-sneeze { 0%{transform:translateX(-50%) translateY(0) rotate(0);} 30%{transform:translateX(-50%) translateY(-2px) rotate(-4deg);} 46%{transform:translateX(-50%) translateY(3px) rotate(5deg);} 60%{transform:translateX(-50%) translateY(0) rotate(-2deg);} 100%{transform:translateX(-50%) translateY(0) rotate(0);} }
+
+  #dog.act-lick  #sit { animation: a-lick 1.7s ease-in-out 1; transform-origin: 50% 95%; }
+  @keyframes a-lick { 0%,100%{transform:translateX(-50%) translateY(0) rotate(0);} 25%{transform:translateX(-50%) translateY(3px) rotate(-3deg);} 50%{transform:translateX(-50%) translateY(0);} 75%{transform:translateX(-50%) translateY(3px) rotate(3deg);} }
+
+  #dog.act-lie   #sit { animation: a-lie 3.2s ease-in-out 1; }
+  @keyframes a-lie { 0%,100%{transform:translateX(-50%) scaleY(1) scaleX(1);} 18%,85%{transform:translateX(-50%) scaleY(0.58) scaleX(1.1);} }
+
+  /* tongue overlay (used by the tongue action) */
+  #tongue { position: absolute; left: 50%; top: 40px; width: 6px; height: 5px; margin-left: -3px;
+    background: #e7869a; border-radius: 0 0 4px 4px; opacity: 0; pointer-events: none; transform-origin: 50% 0; }
+  #dog.act-tongue #tongue { animation: t-drop 1.6s ease-in-out 1; }
+  @keyframes t-drop { 0%,100%{opacity:0; transform:scaleY(0.2);} 20%,80%{opacity:1; transform:scaleY(1);} }
+
+  /* little cue (Zzz / sneeze puff) */
+  #cue { position: absolute; left: 50%; top: 6px; transform: translateX(-50%); font-size: 12px;
+    opacity: 0; pointer-events: none; }
+  #cue.show { animation: cue 1.4s ease-out 1; }
+  @keyframes cue { 0%{opacity:0; transform:translate(-50%,4px) scale(0.6);} 30%{opacity:1; transform:translate(-50%,-4px) scale(1);} 100%{opacity:0; transform:translate(-50%,-12px) scale(1);} }
+
+  /* speech bubble */
+  #bubble { position: absolute; left: 50%; top: 0; transform: translateX(-50%) scale(0);
+    background: rgba(255,255,255,0.97); border: 1.5px solid #2f2a25; border-radius: 10px;
+    padding: 1px 6px; font: 700 10px/1.1 -apple-system,"Helvetica Neue",sans-serif; color: #2f2a25;
+    white-space: nowrap; box-shadow: 0 2px 5px rgba(0,0,0,0.22); pointer-events: none;
+    display: flex; align-items: center; gap: 3px; z-index: 6; }
+  #bubble.show { animation: pop 0.3s ease-out forwards; }
+  @keyframes pop { 0%{transform:translateX(-50%) scale(0);} 70%{transform:translateX(-50%) scale(1.12);} 100%{transform:translateX(-50%) scale(1);} }
+  #bubble .emoji { font-size: 12px; }
+
+  /* close button (double-click) */
+  #ui { position: absolute; inset: 0; pointer-events: none; z-index: 7; }
+  #closeBtn { position: absolute; top: 1px; right: 1px; display: none;
+    width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #fff;
+    background: #e23b3b; color: #fff; font: 700 11px/1 -apple-system,sans-serif;
+    cursor: pointer; pointer-events: auto; box-shadow: 0 1px 4px rgba(0,0,0,0.4); padding: 0; }
+  #closeBtn.show { display: block; }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div id="bubble"><span class="emoji" id="bubble-emoji"></span><span id="bubble-text"></span></div>
+    <div id="shadow"></div>
+    <div id="flip">
+      <div id="dog">
+        <img id="sit" class="pose" src="assets/sit.png" alt="" draggable="false"/>
+        <div id="walk" class="pose">
+          <img class="body" src="assets/walk.png" alt="" draggable="false"/>
+        </div>
+        <div id="tongue"></div>
+        <div id="cue"></div>
+      </div>
+    </div>
+    <div id="ui"><button id="closeBtn" title="Close Yorkie">✕</button></div>
+  </div>
+
+<script>
+  const dog=document.getElementById('dog'), flip=document.getElementById('flip');
+  const bubble=document.getElementById('bubble'), bubbleEmoji=document.getElementById('bubble-emoji');
+  const bubbleText=document.getElementById('bubble-text'), cue=document.getElementById('cue');
+  const closeBtn=document.getElementById('closeBtn');
+
+  let emoting=false, acting=false, mode='idle', uiOpen=false, hideTimer=null;
+
+  const EMOTIONS=[
+    {cls:'emo-joy',   emoji:'😊', word:'Yay!',    ms:2300},
+    {cls:'emo-excite',emoji:'🤩', word:'Woohoo!', ms:2000},
+    {cls:'emo-anger', emoji:'😠', word:'Grrr!',   ms:1900},
+    {cls:'emo-sad',   emoji:'🥺', word:'Aww…',    ms:2400},
+  ];
+  const ACT_MS={look:2600,yawn:1900,jump:850,smile:1200,tongue:1600,sneeze:1000,lick:1700,lie:3200};
+
+  let curAct=null, actTimer=null;
+  function clearAction(){ if(curAct){ dog.classList.remove('act-'+curAct); curAct=null; } clearTimeout(actTimer); acting=false; }
+
+  // walk.png faces LEFT by default. Orient it along the travel direction:
+  // mirror (not 180° rotate) when heading rightward so it never goes belly-up,
+  // and rotate for upward / downward / diagonal motion.
+  let walkAngle = 180;
+  function walkTransform(deg){
+    const rightish = Math.cos(deg * Math.PI / 180) > 1e-6;   // dx > 0 (vertical → rotate, not mirror)
+    if(!rightish){
+      let rot = ((deg - 180 + 180) % 360 + 360) % 360 - 180;
+      return `rotate(${rot.toFixed(1)}deg)`;
+    }
+    return `scaleX(-1) rotate(${(-deg).toFixed(1)}deg)`;
+  }
+  function applyMode(){
+    if(emoting){ dog.classList.remove('walking'); flip.style.transform=''; return; }
+    if(mode==='walk'){ clearAction(); dog.classList.add('walking'); flip.style.transform = walkTransform(walkAngle); }
+    else { dog.classList.remove('walking'); flip.style.transform=''; }
+  }
+  window.pet.onState(({mode:m,angle:a})=>{ mode=m; if(typeof a==='number') walkAngle=a; applyMode(); });
+
+  // ---- idle actions (only while resting) ----
+  window.pet.onAction((name)=>{
+    if(emoting||acting||mode==='walk'||!ACT_MS[name]) return;
+    acting=true; curAct=name;
+    dog.classList.add('act-'+name);
+    if(name==='yawn') showCue('💤');
+    else if(name==='sneeze') showCue('💨');
+    actTimer=setTimeout(()=>{ dog.classList.remove('act-'+name); curAct=null; acting=false; }, ACT_MS[name]);
+  });
+  function showCue(txt){ cue.textContent=txt; cue.classList.remove('show'); void cue.offsetWidth; cue.classList.add('show'); }
+
+  // ---- click emotion ----
+  function triggerEmote(){
+    if(emoting||acting)return; emoting=true; window.pet.dragStart();
+    const e=EMOTIONS[(Math.random()*EMOTIONS.length)|0];
+    dog.classList.remove('walking'); flip.style.transform=''; dog.classList.add(e.cls);
+    bubbleEmoji.textContent=e.emoji; bubbleText.textContent=e.word;
+    bubble.classList.remove('show'); void bubble.offsetWidth; bubble.classList.add('show');
+    setTimeout(()=>{ dog.classList.remove(e.cls); bubble.classList.remove('show');
+      bubble.style.transform='translateX(-50%) scale(0)'; emoting=false; window.pet.dragEnd(); applyMode(); }, e.ms);
+  }
+
+  // ---- close button ----
+  function toggleClose(){
+    uiOpen=!uiOpen; closeBtn.classList.toggle('show',uiOpen);
+    window.pet.setInteractive(true);
+    clearTimeout(hideTimer);
+    if(uiOpen) hideTimer=setTimeout(()=>{ uiOpen=false; closeBtn.classList.remove('show'); }, 4000);
+  }
+  closeBtn.addEventListener('click',(e)=>{ e.stopPropagation(); window.pet.quit(); });
+  closeBtn.addEventListener('mousedown',(e)=>{ e.stopPropagation(); });
+
+  // ---- interaction: only the dog/UI is clickable; rest is click-through ----
+  let overDog=false;
+  window.addEventListener('mousemove',(e)=>{
+    const el=document.elementFromPoint(e.clientX,e.clientY);
+    const on=uiOpen || !!(el&&el.closest&&(el.closest('#dog')||el.closest('#ui')));
+    if(on!==overDog){ overDog=on; window.pet.setInteractive(on); }
+    if(pressed)doDrag(e);
+  });
+
+  // ---- click vs drag vs double-click ----
+  let pressed=false,moved=0,lastX=0,lastY=0,clicks=0,clickTimer=null;
+  dog.addEventListener('mousedown',(e)=>{ pressed=true;moved=0;lastX=e.screenX;lastY=e.screenY;window.pet.dragStart();e.preventDefault(); });
+  function doDrag(e){ const dx=e.screenX-lastX,dy=e.screenY-lastY; lastX=e.screenX;lastY=e.screenY;
+    moved+=Math.abs(dx)+Math.abs(dy); if(moved>5&&!emoting)window.pet.dragMove(dx,dy); }
+  window.addEventListener('mouseup',()=>{
+    if(!pressed)return; pressed=false;
+    if(moved>5){ window.pet.dragEnd(); return; }
+    // distinguish single (emote) vs double (close button) click
+    clicks++;
+    if(clicks===1){ clickTimer=setTimeout(()=>{ clicks=0; triggerEmote(); }, 250); }
+    else { clearTimeout(clickTimer); clicks=0; window.pet.dragEnd(); toggleClose(); }
+  });
+</script>
+</body>
+</html>
