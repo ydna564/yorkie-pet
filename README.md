@@ -1,6 +1,6 @@
-# 🐶 Yorkie — Desktop Pet (电子宠物)
+# Yorkie — Desktop Pet (电子宠物)
 
-A Yorkshire Terrier that lives on your screen. It roams around, rests with little
+A Yorkshire Terrier that lives on your screen. Roams around, rests with little
 actions, and reacts to your clicks.
 
 ## Run
@@ -11,7 +11,7 @@ npm start          # or: npx electron .
 Or double-click **start.command** in Finder. Double-click **stop.command** to quit.
 
 ## How to interact
-- **Click the dog** → a random emotion (😊 joy, 🤩 excitement, 😠 anger, 🥺 sad).
+- **Click the dog** → a random emotion (joy, excitement, anger, sad).
 - **Drag the dog** → reposition it anywhere.
 - **Double-click the dog** → shows a ✕ button to close the pet.
 - **Menu-bar icon** (little Yorkie face) → *Come here (center)* / *Quit*.
@@ -19,9 +19,7 @@ Or double-click **start.command** in Finder. Double-click **stop.command** to qu
 
 ## Behavior
 - Roams to random spots anywhere on screen (sit pose ↔ walk pose, flips to face travel direction).
-- Rests for a random spell (5 seconds to an hour); while resting it does little actions:
-  look around, yawn, jump, smile, stick out tongue, sneeze, lick, lie down.
-- Always on top; transparent except the dog, so clicks elsewhere pass through.
+- Rests for a random spell (5 seconds to an hour), while resting it does little actions including look around, yawn, jump, smile, stick out tongue, sneeze, lick, lie down.
 - Hidden from the Dock and task switcher.
 
 ## Files
