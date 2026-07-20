@@ -22,7 +22,7 @@ Or double-click **start.command** in Finder. Double-click **stop.command** to qu
 - Rests for a random spell (5 seconds to an hour), while resting it does little actions including look around, yawn, jump, smile, stick out tongue, sneeze, lick, lie down.
 - Hidden from the Dock and task switcher.
 
-## Files
+## Project Structure
 - `main.js` — Electron main process: transparent always-on-top window, 2D roam/rest loop, tray, shortcuts.
 - `index.html` — the pet UI: sprites, CSS animations, click/drag/double-click logic.
 - `preload.js` — secure bridge between the window and the main process.
