@@ -27,6 +27,8 @@ Or double-click **start.command** in Finder. Double-click **stop.command** to qu
 - `index.html` — the pet UI: sprites, CSS animations, click/drag/double-click logic.
 - `preload.js` — secure bridge between the window and the main process.
 - `assets/` — `sit.png` (resting), `walk.png` (moving), `tray.png` (menu-bar logo).
+- `start.command` / `stop.command` — double-clickable launchers to start and stop the pet.
+- `package.json` — Electron dependencies and run scripts.
 
 ## Start automatically at login (optional)
 System Settings → General → Login Items → **+** → choose `start.command`.
