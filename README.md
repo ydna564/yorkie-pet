@@ -1,6 +1,6 @@
-# Yorkie — Desktop Pet (电子宠物)
+# Yorkie
 
-A Yorkshire Terrier that lives on your screen. Roams around, rests with little
+A Desktop Pet Yorkshire Terrier that lives on your screen, roams around, rests with little
 actions, and reacts to your clicks.
 
 ## Run
