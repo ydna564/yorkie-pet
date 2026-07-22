@@ -1,16 +1,16 @@
 # Yorkie
 
 A Desktop Pet Yorkshire Terrier that lives on your screen, roams around, rests with little
-actions, and reacts to your clicks. Built with Electron — a transparent, always-on-top,
+actions, and reacts to your clicks. Built with Electron, a transparent, always-on-top,
 click-through-friendly window with no Dock icon.
 
-![Yorkie — a desktop pet that roams your screen](docs/hero.png)
+![Yorkie, a desktop pet that roams your screen](docs/hero.png)
 
 ## Highlights
 
 - 🐕 Hand-drawn Yorkie that **walks around your screen** and flips to face its travel direction
-- 😴 **Rests** for random spells and idles with little actions — look around, yawn, jump, smile, stick out tongue, sneeze, lick, lie down
-- 🖱️ **Reacts to you** — click for a random emotion, drag to reposition, double-click to dismiss
+- 😴 **Rests** for random spells and idles with little actions such as look around, yawn, jump, smile, stick out tongue, sneeze, lick, lie down
+- 🖱️ **Reacts to you** with a click for a random emotion, a drag to reposition, or a double-click to dismiss
 - 🎛️ **Menu-bar control** + global hotkeys (⌘⇧Y summon · ⌘⇧Q quit)
 - 👻 Stays **out of the Dock and task switcher**, so it's just a pet, not an app window
 
